@@ -1,0 +1,78 @@
+* {
+    font-family: "微软雅黑";
+}
+
+input, textarea, select {
+    font-size: 12px;
+}
+
+input {
+    height: 22px
+}
+
+input[type=radio] {
+    width: 10px;
+    height: 10px;
+}
+
+.formStyle {
+    margin-top: 5px;
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+/*easyui btn样式*/
+.l-btn-text {
+    margin: 0px 10px
+}
+
+.dialog-tool-separator {
+    float: none;
+}
+
+/*表单样式1：一行2列 start*/
+.panel-form {
+    padding: 30px 60px;
+    float: left;
+}
+
+.panel-form .row {
+    margin-bottom: 20px;
+    width: 100%;
+    float: left
+}
+
+.panel-form .row .cell-label {
+    width: 15%;
+    float: left
+}
+
+/*空白*/
+.panel-form .row .cell-bank {
+    width: 10%;
+    float: left
+}
+
+.panel-form .row .cell-text {
+    width: 30%;
+    float: left
+}
+
+.panel-form .row .cell-area {
+    width: 85%;
+    float: left
+}
+
+/*表单样式1：一行2列 end*/
+
+/**查询列表**/
+.searchform {
+    margin-top: 12px;
+}
+.searchform .searchLabel {
+    padding-right: 4px;
+    padding-left: 2px;
+}
+
+
+

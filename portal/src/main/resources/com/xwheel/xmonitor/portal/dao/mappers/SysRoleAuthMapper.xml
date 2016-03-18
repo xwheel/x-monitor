@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xwheel.xmonitor.portal.dao.mappers.SysRoleAuthMapper">
+
+
+    <!--定义表字段-->
+    <sql id="sysRoleAuthAllColumns">
+        record_id,
+        role_code,
+        auth_code
+    </sql>
+
+    <sql id="sysRoleAuthWhereCondition">
+        <where>
+            <if test="recordId != null and recordId!=''">
+                and record_id = #{recordId}
+            </if>
+            <if test="roleCode != null and roleCode!=''">
+                and role_code = #{roleCode}
+            </if>
+            <if test="authCode != null and authCode!=''">
+                and auth_code = #{authCode}
+            </if>
+        </where>
+    </sql>
+
+    <!--定义属性与表字段的对应关系-->
+    <resultMap id="sysRoleAuthResultMap" type="sysRoleAuthModel">
+        <result column="record_id" property="recordId" javaType="Integer"/>
+        <result column="role_code" property="roleCode" javaType="String"/>
+        <result column="auth_code" property="authCode" javaType="String"/>
+    </resultMap>
+
+    <!--查询单个对象-->
+    <select id="getSysRoleAuth" resultMap="sysRoleAuthResultMap" parameterType="int">
+        select
+        <include refid="sysRoleAuthAllColumns"/>
+        from sys_role_auth a
+        where a.record_id = #{recordId}
+    </select>
+
+    <select id="getSysRoleAuthTree" resultType="com.xwheel.xmonitor.portal.entity.SysAuthTree" parameterType="String">
+        select sa.parent_code pId,sa.auth_code id,sa.auth_name name,
+        case when (sar.role_code=#{roleCode}) then true else false end 'checked'
+        from sys_auth sa
+        left join ( select * from sys_role_auth where role_code=#{roleCode}) sar
+        on sa.auth_code = sar.auth_code
+    </select>
+
+    <!--新增-->
+    <insert id="saveSysRoleAuth" parameterType="sysRoleAuthModel">
+        insert into sys_role_auth(<include refid="sysRoleAuthAllColumns"/>)
+        values(
+        #{recordId},
+        #{roleCode},
+        #{authCode}
+        )
+    </insert>
+
+    <insert id="saveSysRoleAuthList" parameterType="list">
+        insert into sys_role_auth ( <include refid="sysRoleAuthAllColumns"/> )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.recordId},#{item.roleCode},#{item.authCode})
+        </foreach>
+    </insert>
+
+    <!--删除-->
+    <delete id="deleteSysRoleAuth" parameterType="int">
+        delete from sys_role_auth where record_id=#{recordId}
+    </delete>
+    <delete id="deleteSysRoleAuthByRoleCode" parameterType="String">
+        delete from sys_role_auth where role_code=#{roleCode}
+    </delete>
+
+    <!--更新-->
+    <update id="updateSysRoleAuth" parameterType="sysRoleAuthModel">
+        update sys_role_auth
+        <set>
+            <if test="recordId != null and recordId!=''">
+                record_id = #{recordId},
+            </if>
+            <if test="roleCode != null and roleCode!=''">
+                role_code = #{roleCode},
+            </if>
+            <if test="authCode != null and authCode!=''">
+                auth_code = #{authCode},
+            </if>
+        </set>
+        where record_id = #{recordId}
+    </update>
+
+
+</mapper>

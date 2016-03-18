@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xwheel.xmonitor.portal.dao.mappers.SysDictItemMapper">
+
+    <!--定义表字段-->
+    <sql id="sysDictItemAllColumns">
+                record_id,
+            dict_group_code,
+            dict_item_seq,
+            dict_item_code,
+            dict_item_name,
+            dict_item_note,
+            language
+    </sql>
+
+    <sql id="sysDictItemWhereCondition">
+        <where>
+            <if test="recordId != null and recordId!=''">
+                and record_id = #{recordId}
+            </if>
+            <if test="dictGroupCode != null and dictGroupCode!=''">
+                and dict_group_code = #{dictGroupCode}
+            </if>
+            <if test="dictItemSeq != null and dictItemSeq!=''">
+                and dict_item_seq = #{dictItemSeq}
+            </if>
+            <if test="dictItemCode != null and dictItemCode!=''">
+                and dict_item_code like '%${dictItemCode}%'
+            </if>
+            <if test="dictItemName != null and dictItemName!=''">
+                and dict_item_name like '%${dictItemName}%'
+            </if>
+            <if test="dictItemNote != null and dictItemNote!=''">
+                and dict_item_note = #{dictItemNote}
+            </if>
+            <if test="language != null and language!=''">
+                and language = #{language}
+            </if>
+        </where>
+    </sql>
+
+    <!--定义属性与表字段的对应关系-->
+    <resultMap id="sysDictItemResultMap" type="sysDictItemModel">
+        <result column="record_id" property="recordId" javaType="Integer"/>
+        <result column="dict_group_code" property="dictGroupCode" javaType="String"/>
+        <result column="dict_item_seq" property="dictItemSeq" javaType="Integer"/>
+        <result column="dict_item_code" property="dictItemCode" javaType="String"/>
+        <result column="dict_item_name" property="dictItemName" javaType="String"/>
+        <result column="dict_item_note" property="dictItemNote" javaType="String"/>
+        <result column="language" property="language" javaType="String"/>
+    </resultMap>
+
+    <!--查询单个对象-->
+    <select id="getSysDictItem" resultMap="sysDictItemResultMap" parameterType="int">
+        select
+        <include refid="sysDictItemAllColumns"/>
+        from sys_dict_item a
+        where a.record_id = #{recordId}
+    </select>
+
+    <!--查询多个对象(分页)-->
+    <select id="getSysDictItemListPage" resultMap="sysDictItemResultMap" parameterType="java.util.Map">
+        select
+        <include refid="sysDictItemAllColumns"/>
+        from sys_dict_item a
+        <include refid="sysDictItemWhereCondition"/>
+        <if test="orderBy != null and orderBy!=''">
+            order by #{orderBy} #{order}
+        </if>
+        <if test="startIndex != null and startIndex!=''">
+            limit  #{startIndex},#{lastIndex}
+        </if>
+    </select>
+    <select id="getSysDictItemListPageCount" resultType="long" parameterType="java.util.Map">
+        select count(*) value
+        from sys_dict_item a
+        <include refid="sysDictItemWhereCondition"/>
+    </select>
+
+    <!--查询所有对象-->
+    <select id="getSysDictItemListAll" resultMap="sysDictItemResultMap" parameterType="java.util.Map">
+        select
+        <include refid="sysDictItemAllColumns"/>
+        from sys_dict_item a
+        <include refid="sysDictItemWhereCondition"/>
+    </select>
+
+    <!--新增-->
+    <insert id="saveSysDictItem" parameterType="sysDictItemModel">
+        insert into sys_dict_item(<include refid="sysDictItemAllColumns"/>)
+        values(
+        #{recordId},
+        #{dictGroupCode},
+        #{dictItemSeq},
+        #{dictItemCode},
+        #{dictItemName},
+        #{dictItemNote},
+        #{language}
+        )
+    </insert>
+
+    <!--删除-->
+    <delete id="deleteSysDictItem" parameterType="int">
+        delete  FROM sys_dict_item where record_id=#{recordId}
+    </delete>
+    <!--更新-->
+    <update id="updateSysDictItem" parameterType="sysDictItemModel">
+        update sys_dict_item
+        <set>
+            <if test="recordId != null and recordId!=''">
+                record_id = #{recordId},
+            </if>
+            <if test="dictGroupCode != null and dictGroupCode!=''">
+                dict_group_code = #{dictGroupCode},
+            </if>
+            <if test="dictItemSeq != null and dictItemSeq!=''">
+                dict_item_seq = #{dictItemSeq},
+            </if>
+            <if test="dictItemCode != null and dictItemCode!=''">
+                dict_item_code = #{dictItemCode},
+            </if>
+            <if test="dictItemName != null and dictItemName!=''">
+                dict_item_name = #{dictItemName},
+            </if>
+            <if test="dictItemNote != null and dictItemNote!=''">
+                dict_item_note = #{dictItemNote},
+            </if>
+            <if test="language != null and language!=''">
+                language = #{language},
+            </if>
+        </set>
+        where record_id = #{recordId}
+    </update>
+
+
+
+
+
+</mapper>

@@ -1,0 +1,16 @@
+/**
+  扩展的自定义图标样式，对应图标路径为：images/icon
+  系统中还有icon.css
+**/
+/*刷新*/
+.icon-16-refresh {
+    background: url(../images/icon/16/refresh.png) no-repeat center center;
+}
+/*收拢*/
+.icon-16-collapse {
+    background: url(../images/icon/16/collapse.gif) no-repeat center center;
+}
+/*展开*/
+.icon-16-expand {
+    background: url(../images/icon/16/expand.gif) no-repeat center center;
+}

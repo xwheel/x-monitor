@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xwheel.xmonitor.portal.dao.mappers.SysRoleMapper">
+
+    <!--定义表字段-->
+    <sql id="sysRoleAllColumns">
+                record_id,
+            role_code,
+            role_name,
+            remark,
+            status,
+            creator_id,
+            creator_name,
+            create_time
+    </sql>
+
+    <sql id="sysRoleWhereCondition">
+        <where>
+            <if test="recordId != null and recordId!=''">
+                and record_id = #{recordId}
+            </if>
+            <if test="roleCode != null and roleCode!=''">
+                and role_code = #{roleCode}
+            </if>
+            <if test="roleName != null and roleName!=''">
+                and role_name = #{roleName}
+            </if>
+            <if test="remark != null and remark!=''">
+                and remark = #{remark}
+            </if>
+            <if test="status != null and status!=''">
+                and status = #{status}
+            </if>
+            <if test="creatorId != null and creatorId!=''">
+                and creator_id = #{creatorId}
+            </if>
+            <if test="creatorName != null and creatorName!=''">
+                and creator_name = #{creatorName}
+            </if>
+            <if test="createTime != null and createTime!=''">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </sql>
+
+    <!--定义属性与表字段的对应关系-->
+    <resultMap id="sysRoleResultMap" type="sysRoleModel">
+        <result column="record_id" property="recordId" javaType="Integer"/>
+        <result column="role_code" property="roleCode" javaType="String"/>
+        <result column="role_name" property="roleName" javaType="String"/>
+        <result column="remark" property="remark" javaType="String"/>
+        <result column="status" property="status" javaType="String"/>
+        <result column="creator_id" property="creatorId" javaType="String"/>
+        <result column="creator_name" property="creatorName" javaType="String"/>
+        <result column="create_time" property="createTime" javaType="Date"/>
+    </resultMap>
+
+    <!--查询单个对象-->
+    <select id="getSysRole" resultMap="sysRoleResultMap" parameterType="int">
+        select
+        <include refid="sysRoleAllColumns"/>
+        from sys_role a
+        where a.record_id = #{recordId}
+    </select>
+
+    <!--查询多个对象(分页)-->
+    <select id="getSysRoleListPage" resultMap="sysRoleResultMap" parameterType="java.util.Map">
+        select
+        <include refid="sysRoleAllColumns"/>
+        from sys_role a
+        <include refid="sysRoleWhereCondition"/>
+        <if test="startIndex != null and startIndex!=''">
+            limit #{startIndex},#{lastIndex}
+        </if>
+    </select>
+    <select id="getSysRoleListPageCount" resultType="long" parameterType="java.util.Map">
+        select count(*) value
+        from sys_role a
+        <include refid="sysRoleWhereCondition"/>
+    </select>
+
+    <!--查询所有对象-->
+    <select id="getSysRoleListAll" resultMap="sysRoleResultMap" parameterType="java.util.Map">
+        select
+        <include refid="sysRoleAllColumns"/>
+        from sys_role a
+        <include refid="sysRoleWhereCondition"/>
+    </select>
+
+    <!--新增-->
+    <insert id="saveSysRole" parameterType="sysRoleModel">
+        insert into sys_role(<include refid="sysRoleAllColumns"/>)
+        values(
+        #{recordId},
+        #{roleCode},
+        #{roleName},
+        #{remark},
+        #{status},
+        #{creatorId},
+        #{creatorName},
+        #{createTime}
+        )
+    </insert>
+
+    <!--删除-->
+    <delete id="deleteSysRole" parameterType="int">
+        delete from sys_role where record_id=#{recordId}
+    </delete>
+    <!--更新-->
+    <update id="updateSysRole" parameterType="sysRoleModel">
+        update sys_role
+        <set>
+            <if test="recordId != null and recordId!=''">
+                record_id = #{recordId},
+            </if>
+            <if test="roleCode != null and roleCode!=''">
+                role_code = #{roleCode},
+            </if>
+            <if test="roleName != null and roleName!=''">
+                role_name = #{roleName},
+            </if>
+            <if test="remark != null and remark!=''">
+                remark = #{remark},
+            </if>
+            <if test="status != null and status!=''">
+                status = #{status},
+            </if>
+            <if test="creatorId != null and creatorId!=''">
+                creator_id = #{creatorId},
+            </if>
+            <if test="creatorName != null and creatorName!=''">
+                creator_name = #{creatorName},
+            </if>
+            <if test="createTime != null and createTime!=''">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where record_id = #{recordId}
+    </update>
+
+
+</mapper>

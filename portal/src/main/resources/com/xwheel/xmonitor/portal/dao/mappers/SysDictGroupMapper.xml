@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xwheel.xmonitor.portal.dao.mappers.SysDictGroupMapper">
+
+    <!--定义表字段-->
+    <sql id="sysDictGroupAllColumns">
+        record_id,
+        dict_group_code,
+        dict_group_name,
+        dict_group_note,
+        allow_customization_flag,
+        enable_start_time,
+        enable_end_time,
+        language
+    </sql>
+
+    <sql id="sysDictGroupWhereCondition">
+        <where>
+            <if test="recordId != null and recordId!=''">
+                and record_id = #{recordId}
+            </if>
+            <if test="dictGroupCode != null and dictGroupCode!=''">
+                and dict_group_code  like '%${dictGroupCode}%'
+            </if>
+            <if test="dictGroupName != null and dictGroupName!=''">
+                and dict_group_name like '%${dictGroupName}%'
+            </if>
+            <if test="dictGroupNote != null and dictGroupNote!=''">
+                and dict_group_note  like '%${dictGroupNote}%'
+            </if>
+            <if test="allowCustomizationFlag != null and allowCustomizationFlag!=''">
+                and allow_customization_flag = #{allowCustomizationFlag}
+            </if>
+            <if test="enableStartTime != null and enableStartTime!=''">
+                and enable_start_time = #{enableStartTime}
+            </if>
+            <if test="enableEndTime != null and enableEndTime!=''">
+                and enable_end_time = #{enableEndTime}
+            </if>
+            <if test="language != null and language!=''">
+                and language = #{language}
+            </if>
+        </where>
+    </sql>
+
+    <!--定义属性与表字段的对应关系-->
+    <resultMap id="sysDictGroupResultMap" type="sysDictGroupModel">
+        <result column="record_id" property="recordId" javaType="Integer"/>
+        <result column="dict_group_code" property="dictGroupCode" javaType="String"/>
+        <result column="dict_group_name" property="dictGroupName" javaType="String"/>
+        <result column="dict_group_note" property="dictGroupNote" javaType="String"/>
+        <result column="allow_customization_flag" property="allowCustomizationFlag" javaType="String"/>
+        <result column="enable_start_time" property="enableStartTime" javaType="Date"/>
+        <result column="enable_end_time" property="enableEndTime" javaType="Date"/>
+        <result column="language" property="language" javaType="String"/>
+    </resultMap>
+
+    <!--查询单个对象-->
+    <select id="getSysDictGroup" resultMap="sysDictGroupResultMap" parameterType="int">
+        select
+        <include refid="sysDictGroupAllColumns"/>
+        from sys_dict_group a
+        where a.record_id = #{recordId}
+    </select>
+
+    <!--查询多个对象(分页)-->
+    <select id="getSysDictGroupListPage" resultMap="sysDictGroupResultMap" parameterType="java.util.Map">
+        select
+        <include refid="sysDictGroupAllColumns"/>
+        from sys_dict_group a
+        <include refid="sysDictGroupWhereCondition"/>
+        <if test="orderBy != null and orderBy!=''">
+            order by #{orderBy} #{order}
+        </if>
+        <if test="startIndex != null and startIndex!=''">
+          limit  #{startIndex},#{lastIndex}
+        </if>
+    </select>
+    <select id="getSysDictGroupListPageCount" resultType="long" parameterType="java.util.Map">
+        select count(*) value
+        from sys_dict_group a
+        <include refid="sysDictGroupWhereCondition"/>
+    </select>
+
+    <!--查询所有对象-->
+    <select id="getSysDictGroupListAll" resultMap="sysDictGroupResultMap" parameterType="java.util.Map">
+        select
+        <include refid="sysDictGroupAllColumns"/>
+        from sys_dict_group a
+    </select>
+
+    <!--新增-->
+    <insert id="saveSysDictGroup" parameterType="sysDictGroupModel">
+        insert into sys_dict_group(<include refid="sysDictGroupAllColumns"/>)
+        values(
+        #{recordId},
+        #{dictGroupCode},
+        #{dictGroupName},
+        #{dictGroupNote},
+        #{allowCustomizationFlag},
+        #{enableStartTime},
+        #{enableEndTime},
+        #{language}
+        )
+    </insert>
+
+    <!--删除-->
+    <delete id="deleteSysDictGroup" parameterType="int">
+        delete  FROM sys_dict_group where record_id=#{recordId}
+    </delete>
+    <!--更新-->
+    <update id="updateSysDictGroup" parameterType="sysDictGroupModel">
+        update sys_dict_group
+        <set>
+            <if test="recordId != null and recordId!=''">
+                record_id = #{recordId},
+            </if>
+            <if test="dictGroupCode != null and dictGroupCode!=''">
+                dict_group_code = #{dictGroupCode},
+            </if>
+            <if test="dictGroupName != null and dictGroupName!=''">
+                dict_group_name = #{dictGroupName},
+            </if>
+            <if test="dictGroupNote != null and dictGroupNote!=''">
+                dict_group_note = #{dictGroupNote},
+            </if>
+            <if test="allowCustomizationFlag != null and allowCustomizationFlag!=''">
+                allow_customization_flag = #{allowCustomizationFlag},
+            </if>
+            <if test="enableStartTime != null and enableStartTime!=''">
+                enable_start_time = #{enableStartTime},
+            </if>
+            <if test="enableEndTime != null and enableEndTime!=''">
+                enable_end_time = #{enableEndTime},
+            </if>
+            <if test="language != null and language!=''">
+                language = #{language},
+            </if>
+        </set>
+        where record_id = #{recordId}
+    </update>
+
+
+</mapper>

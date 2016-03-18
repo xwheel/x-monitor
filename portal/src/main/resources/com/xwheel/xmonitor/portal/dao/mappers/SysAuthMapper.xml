@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xwheel.xmonitor.portal.dao.mappers.SysAuthMapper">
+
+    <!--定义表字段-->
+    <sql id="sysAuthAllColumns">
+                record_id,
+            parent_code,
+            auth_code,
+            auth_name,
+            auth_type,
+            menu_url,
+            menu_class,
+            menu_image_url,
+            display_no,
+            remark,
+            creator_id,
+            creator_name,
+            create_time
+    </sql>
+
+    <sql id="sysAuthWhereCondition">
+        <where>
+            <if test="recordId != null and recordId!=''">
+                and record_id = #{recordId}
+            </if>
+            <if test="parentCode != null and parentCode!=''">
+                and parent_code = #{parentCode}
+            </if>
+            <if test="authCode != null and authCode!=''">
+                and auth_code = #{authCode}
+            </if>
+            <if test="authName != null and authName!=''">
+                and auth_name = #{authName}
+            </if>
+            <if test="authType != null and authType!=''">
+                and auth_type = #{authType}
+            </if>
+            <if test="menuUrl != null and menuUrl!=''">
+                and menu_url = #{menuUrl}
+            </if>
+            <if test="menuClass != null and menuClass!=''">
+                and menu_class = #{menuClass}
+            </if>
+            <if test="menuImageUrl != null and menuImageUrl!=''">
+                and menu_image_url = #{menuImageUrl}
+            </if>
+            <if test="displayNo != null and displayNo!=''">
+                and display_no = #{displayNo}
+            </if>
+            <if test="remark != null and remark!=''">
+                and remark = #{remark}
+            </if>
+            <if test="creatorId != null and creatorId!=''">
+                and creator_id = #{creatorId}
+            </if>
+            <if test="creatorName != null and creatorName!=''">
+                and creator_name = #{creatorName}
+            </if>
+            <if test="createTime != null and createTime!=''">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </sql>
+
+    <!--定义属性与表字段的对应关系-->
+    <resultMap id="sysAuthResultMap" type="sysAuthModel">
+        <result column="record_id" property="recordId" javaType="Integer"/>
+        <result column="parent_code" property="parentCode" javaType="String"/>
+        <result column="auth_code" property="authCode" javaType="String"/>
+        <result column="auth_name" property="authName" javaType="String"/>
+        <result column="auth_type" property="authType" javaType="String"/>
+        <result column="menu_url" property="menuUrl" javaType="String"/>
+        <result column="menu_class" property="menuClass" javaType="String"/>
+        <result column="menu_image_url" property="menuImageUrl" javaType="String"/>
+        <result column="display_no" property="displayNo" javaType="Integer"/>
+        <result column="remark" property="remark" javaType="String"/>
+        <result column="creator_id" property="creatorId" javaType="String"/>
+        <result column="creator_name" property="creatorName" javaType="String"/>
+        <result column="create_time" property="createTime" javaType="Date"/>
+    </resultMap>
+
+    <!--菜单和子菜单对象-->
+    <resultMap id="sysMenuResultMap" type="sysAuthModel">
+        <result column="record_id" property="recordId" javaType="Integer"/>
+        <result column="parent_code" property="parentCode" javaType="String"/>
+        <result column="auth_code" property="authCode" javaType="String"/>
+        <result column="auth_name" property="authName" javaType="String"/>
+        <result column="auth_type" property="authType" javaType="String"/>
+        <result column="menu_url" property="menuUrl" javaType="String"/>
+        <result column="menu_class" property="menuClass" javaType="String"/>
+        <result column="menu_image_url" property="menuImageUrl" javaType="String"/>
+        <result column="display_no" property="displayNo" javaType="Integer"/>
+        <result column="remark" property="remark" javaType="String"/>
+        <result column="creator_id" property="creatorId" javaType="String"/>
+        <result column="creator_name" property="creatorName" javaType="String"/>
+        <result column="create_time" property="createTime" javaType="Date"/>
+        <association property="subSysAuth" column="{parentCode=auth_code}"
+                     javaType="list" select="getSysMenuListAll"/>
+    </resultMap>
+
+
+    <!--查询单个对象-->
+    <select id="getSysAuth" resultMap="sysAuthResultMap" parameterType="int">
+        select
+        <include refid="sysAuthAllColumns"/>
+        from sys_auth a
+        where a.record_id = #{recordId}
+    </select>
+
+    <select id="getSysAuthByAuthCode" resultMap="sysAuthResultMap" parameterType="java.util.Map">
+        select
+        <include refid="sysAuthAllColumns"/>
+        from sys_auth a
+        where a.auth_code = #{authCode}
+    </select>
+
+
+    <!--查询多个对象(分页)-->
+    <select id="getSysAuthListPage" resultMap="sysAuthResultMap" parameterType="java.util.Map">
+        select
+        <include refid="sysAuthAllColumns"/>
+        from sys_auth a
+        <include refid="sysAuthWhereCondition"/>
+        <if test="startIndex != null and startIndex!=''">
+            limit #{startIndex},#{lastIndex}
+        </if>
+    </select>
+    <select id="getSysAuthListPageCount" resultType="long" parameterType="java.util.Map">
+        select count(*) value
+        from sys_auth a
+        <include refid="sysAuthWhereCondition"/>
+    </select>
+
+    <!--查询所有权限和菜单对象-->
+    <select id="getSysAuthListAll" resultMap="sysAuthResultMap" parameterType="java.util.Map">
+        select
+        <include refid="sysAuthAllColumns"/>
+        from sys_auth a
+    </select>
+
+    <!--查询所有菜单数据-->
+    <select id="getSysMenuListAll" resultMap="sysMenuResultMap" parameterType="sysAuthModel">
+        select
+        <include refid="sysAuthAllColumns"/>
+        from sys_auth a
+        where a.auth_type=1
+        <if test="parentCode != null and parentCode!=''">
+            and parent_code = #{parentCode}
+        </if>
+        order by display_no desc
+    </select>
+
+    <select id="getSysAuthListByRoleCode" resultMap="sysAuthResultMap" parameterType="String">
+        select a.record_id,
+        a.parent_code,
+        a.auth_code,
+        a.auth_name,
+        a.auth_type,
+        a.menu_url,
+        a.menu_class,
+        a.menu_image_url,
+        a.display_no,
+        a.remark,
+        a.creator_id,
+        a.creator_name,
+        a.create_time
+        from sys_auth a ,sys_role_auth b
+        where a.auth_code =b.auth_code
+        and b.role_code =#{roleCode}
+    </select>
+
+    <!--新增-->
+    <insert id="saveSysAuth" parameterType="sysAuthModel">
+        insert into sys_auth(<include refid="sysAuthAllColumns"/>)
+        values(
+        #{recordId},
+        #{parentCode},
+        #{authCode},
+        #{authName},
+        #{authType},
+        #{menuUrl},
+        #{menuClass},
+        #{menuImageUrl},
+        #{displayNo},
+        #{remark},
+        #{creatorId},
+        #{creatorName},
+        #{createTime}
+        )
+    </insert>
+
+    <!--删除-->
+    <delete id="deleteSysAuth" parameterType="int">
+        delete from sys_auth where record_id=#{recordId}
+    </delete>
+    <!--更新-->
+    <update id="updateSysAuth" parameterType="sysAuthModel">
+        update sys_auth
+        <set>
+            <if test="recordId != null and recordId!=''">
+                record_id = #{recordId},
+            </if>
+            <if test="parentCode != null and parentCode!=''">
+                parent_code = #{parentCode},
+            </if>
+            <if test="authCode != null and authCode!=''">
+                auth_code = #{authCode},
+            </if>
+            <if test="authName != null and authName!=''">
+                auth_name = #{authName},
+            </if>
+            <if test="authType != null and authType!=''">
+                auth_type = #{authType},
+            </if>
+            <if test="menuUrl != null and menuUrl!=''">
+                menu_url = #{menuUrl},
+            </if>
+            <if test="menuClass != null and menuClass!=''">
+                menu_class = #{menuClass},
+            </if>
+            <if test="menuImageUrl != null and menuImageUrl!=''">
+                menu_image_url = #{menuImageUrl},
+            </if>
+            <if test="displayNo != null and displayNo!=''">
+                display_no = #{displayNo},
+            </if>
+            <if test="remark != null and remark!=''">
+                remark = #{remark},
+            </if>
+            <if test="creatorId != null and creatorId!=''">
+                creator_id = #{creatorId},
+            </if>
+            <if test="creatorName != null and creatorName!=''">
+                creator_name = #{creatorName},
+            </if>
+            <if test="createTime != null and createTime!=''">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where record_id = #{recordId}
+    </update>
+
+
+</mapper>
