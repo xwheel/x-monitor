@@ -21,6 +21,7 @@
         <jstl.version>1.2</jstl.version>
         <taglibs.vesions>1.1.2</taglibs.vesions>
         <jsp.version>2.1</jsp.version>
+        <quartz.version>1.8.4</quartz.version>
 
         <!-- jdbc driver setting -->
         <mysql.driver.version>5.1.34</mysql.driver.version>
@@ -66,6 +67,11 @@
         <!--</repository>-->
         <!-- 其他maven仓库 -->
         <repository>
+            <id>terracotta-releases</id>
+            <name>terracotta</name>
+            <url>http://www.terracotta.org/download/reflector/releases/</url>
+        </repository>
+        <repository>
             <id>oschina-repos</id>
             <name>Oschina Releases</name>
             <url>http://maven.oschina.net/content/groups/public</url>
@@ -100,6 +106,7 @@
             <name>Activiti Repository 2</name>
             <url>https://app.camunda.com/nexus/content/groups/public</url>
         </repository>
+
     </repositories>
 
     <modules>
